@@ -344,14 +344,21 @@ public class DispatcherServlet extends FrameworkServlet {
 
 
 	/**
+	 *  自己生成一个webapplicationcontext上下文
+	 *
 	 * Create a new {@code DispatcherServlet} that will create its own internal web
 	 * application context based on defaults and values provided through servlet
 	 * init-params. Typically used in Servlet 2.5 or earlier environments, where the only
 	 * option for servlet registration is through {@code web.xml} which requires the use
 	 * of a no-arg constructor.
+	 *
+	 * set contextconfiglocation 是frameworkservlet实现的方法,frameworkservlet中的默认contextClass--->XmlWebApplicationContext
+	 *
 	 * <p>Calling {@link #setContextConfigLocation} (init-param 'contextConfigLocation')
 	 * will dictate which XML files will be loaded by the
 	 * {@linkplain #DEFAULT_CONTEXT_CLASS default XmlWebApplicationContext}
+	 *
+	 * 
 	 * <p>Calling {@link #setContextClass} (init-param 'contextClass') overrides the
 	 * default {@code XmlWebApplicationContext} and allows for specifying an alternative class,
 	 * such as {@code AnnotationConfigWebApplicationContext}.
@@ -938,9 +945,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
-		boolean multipartRequestParsed = false;
+		boolean multipartRequestParsed = false; //判断一下是不是文件请求,多部分请求解析
 
-		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request); //获取wbe异步管理器?
 
 		try {
 			ModelAndView mv = null;
@@ -1175,6 +1182,7 @@ public class DispatcherServlet extends FrameworkServlet {
 					logger.trace(
 							"Testing handler map [" + hm + "] in DispatcherServlet with name '" + getServletName() + "'");
 				}
+				//获取handler执行chain
 				HandlerExecutionChain handler = hm.getHandler(request);
 				if (handler != null) {
 					return handler;

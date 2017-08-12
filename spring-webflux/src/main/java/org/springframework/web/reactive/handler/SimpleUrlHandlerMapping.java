@@ -53,7 +53,7 @@ import org.springframework.util.CollectionUtils;
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
-	private final Map<String, Object> urlMap = new LinkedHashMap<>();
+	private final Map<String, Object> urlMap = new LinkedHashMap<>(); //url请求和控制器对应的关系
 
 
 	/**
