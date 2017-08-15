@@ -692,39 +692,27 @@ public class PathPattern implements Comparable<PathPattern> {
 	}
 
 
-	public static final Comparator<PathPattern> SPECIFICITY_COMPARATOR = (p1, p2) -> {
-		// 1) null is sorted last
-		if (p2 == null) {
-			return -1;
-		}
+	/**
+	 * Comparator that sorts patterns by specificity as follows:
+	 * <ol>
+	 * <li>Null instances are last.
+	 * <li>Catch-all patterns are last.
+	 * <li>If both patterns are catch-all, consider the length (longer wins).
+	 * <li>Compare wildcard and captured variable count (lower wins).
+	 * <li>Consider length (longer wins)
+	 * </ol>
+	 */
+	public static final Comparator<PathPattern> SPECIFICITY_COMPARATOR =
+			Comparator.nullsLast(
+					Comparator.<PathPattern>
+							comparingInt(p -> p.isCatchAll() ? 1 : 0)
+							.thenComparingInt(p -> p.isCatchAll() ? scoreByNormalizedLength(p) : 0)
+							.thenComparingInt(PathPattern::getScore)
+							.thenComparingInt(PathPattern::scoreByNormalizedLength)
+			);
 
-		// 2) catchall patterns are sorted last. If both catchall then the
-		// length is considered
-		if (p1.isCatchAll()) {
-			if (p2.isCatchAll()) {
-				int lenDifference = p1.getNormalizedLength() - p2.getNormalizedLength();
-				if (lenDifference != 0) {
-					return (lenDifference < 0) ? +1 : -1;
-				}
-			}
-			else {
-				return +1;
-			}
-		}
-		else if (p2.isCatchAll()) {
-			return -1;
-		}
-
-		// 3) This will sort such that if they differ in terms of wildcards or
-		// captured variable counts, the one with the most will be sorted last
-		int score = p1.getScore() - p2.getScore();
-		if (score != 0) {
-			return (score < 0) ? -1 : +1;
-		}
-
-		// 4) longer is better
-		int lenDifference = p1.getNormalizedLength() - p2.getNormalizedLength();
-		return Integer.compare(0, lenDifference);
-	};
+	private static int scoreByNormalizedLength(PathPattern pattern) {
+		return -pattern.getNormalizedLength();
+	}
 
 }
