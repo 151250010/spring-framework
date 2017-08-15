@@ -526,12 +526,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+		//获取根上下文,使用这个作为当前mvc上下文的双亲上下文
 		WebApplicationContext rootContext =
-				WebApplicationContextUtils.getWebApplicationContext(getServletContext()); //获取根上下文
+				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
 		if (this.webApplicationContext != null) {
-			// A context instance was injected at construction time -> use it //构造函数时候已经注入了web应用上下文
+			 //构造函数时候已经注入了web应用上下文
 			wac = this.webApplicationContext;
 			if (wac instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;
@@ -539,32 +540,26 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc
 					if (cwac.getParent() == null) {
-						// The context instance was injected without an explicit parent -> set
-						// the root application context (if any; may be null) as the parent //没有双亲上下文的话，设置上下文可能为null
+						//没有双亲上下文的话，设置上下文,可能为null
 						cwac.setParent(rootContext);
 					}
+					//
 					configureAndRefreshWebApplicationContext(cwac);
 				}
 			}
 		}
 		if (wac == null) {
 			// 没有的话 就去dispatcherservlet的上下文容器中找,找到的话 默认按照根上下文已经被设置并且用户已经执行了初始化来处理
-			// No context instance was injected at construction time -> see if one
-			// has been registered in the servlet context. If one exists, it is assumed
-			// that the parent context (if any) has already been set and that the
-			// user has performed any initialization such as setting the context id
 			wac = findWebApplicationContext();
 		}
 		if (wac == null) {
-			// No context instance is defined for this servlet -> create a local one
+			// 最后还是没有找到的话，创建一个
 			wac = createWebApplicationContext(rootContext);
 		}
 
 		if (!this.refreshEventReceived) {
 			// 还没有进行刷新事件的话
-			// Either the context is not a ConfigurableApplicationContext with refresh
-			// support or the context injected at construction time had already been
-			// refreshed -> trigger initial onRefresh manually here.
+			// 如果创建的上下文不支持刷新或者是构造器注入的上下文已经被调用过refresh方法，在这里手动刷新
 			onRefresh(wac);
 		}
 
@@ -621,7 +616,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext
 	 */
 	protected WebApplicationContext createWebApplicationContext(@Nullable ApplicationContext parent) {
-		Class<?> contextClass = getContextClass();
+		Class<?> contextClass = getContextClass(); //XmlWebApplicationContext.class
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Servlet with name '" + getServletName() +
 					"' will try to create custom WebApplicationContext context of class '" +
@@ -634,13 +629,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					"] is not of type ConfigurableWebApplicationContext");
 		}
 		ConfigurableWebApplicationContext wac =
-				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
+				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass); //反射生成XmlWebApplicationContext
 
-		wac.setEnvironment(getEnvironment());
-		wac.setParent(parent);
+		wac.setEnvironment(getEnvironment()); //设置环境
+		wac.setParent(parent); //设置双亲上下文
 		String configLocation = getContextConfigLocation();
 		if (configLocation != null) {
-			wac.setConfigLocation(configLocation);
+			wac.setConfigLocation(configLocation); //设置bean定义的配置文件的路径
 		}
 		configureAndRefreshWebApplicationContext(wac);
 
@@ -674,7 +669,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			((ConfigurableWebEnvironment) env).initPropertySources(getServletContext(), getServletConfig());
 		}
 
-		postProcessWebApplicationContext(wac);
+		postProcessWebApplicationContext(wac); //模板方法，在context没有调用refresh之前能做一些事情
 		applyInitializers(wac);
 		wac.refresh();
 	}

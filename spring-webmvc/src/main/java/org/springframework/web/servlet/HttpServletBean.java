@@ -157,7 +157,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
-				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this); //生成一个BeanWrapper?
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
 				initBeanWrapper(bw);
@@ -221,7 +221,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		 * Create new ServletConfigPropertyValues.
 		 * @param config ServletConfig we'll use to take PropertyValues from
 		 * @param requiredProperties set of property names we need, where
-		 * we can't accept default values
+		 * we can't accept default values 必须要传递的参数，没有默认值的
 		 * @throws ServletException if any required properties are missing
 		 */
 		public ServletConfigPropertyValues(ServletConfig config, Set<String> requiredProperties)
@@ -234,7 +234,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 			while (paramNames.hasMoreElements()) {
 				String property = paramNames.nextElement();
 				Object value = config.getInitParameter(property);
-				addPropertyValue(new PropertyValue(property, value));
+				addPropertyValue(new PropertyValue(property, value)); //把所有的初始化的property获取到上下文中
 				if (missingProps != null) {
 					missingProps.remove(property);
 				}

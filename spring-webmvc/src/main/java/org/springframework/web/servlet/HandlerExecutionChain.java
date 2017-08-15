@@ -134,6 +134,7 @@ public class HandlerExecutionChain {
 			for (int i = 0; i < interceptors.length; i++) {
 				HandlerInterceptor interceptor = interceptors[i];
 				if (!interceptor.preHandle(request, response, this.handler)) {
+					//triggerAfterCompletion主要是对所有的拦截器的资源的释放
 					triggerAfterCompletion(request, response, null);
 					return false;
 				}

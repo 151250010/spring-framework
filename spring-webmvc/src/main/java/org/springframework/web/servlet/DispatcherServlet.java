@@ -505,8 +505,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Initialize the strategy objects that this servlet uses.
-	 *  生成我们应用程序需要的上下文
+	 *  mvc框架的各种元素的初始化
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
@@ -596,18 +595,18 @@ public class DispatcherServlet extends FrameworkServlet {
 		this.handlerMappings = null;
 
 		if (this.detectAllHandlerMappings) {
-			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
+			// 从所有的ioc容器中获取HandlerMappings的具体实现
 			Map<String, HandlerMapping> matchingBeans =
 					BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.handlerMappings = new ArrayList<>(matchingBeans.values());
-				// We keep HandlerMappings in sorted order.
+				// 对HandlerMappings排序
 				AnnotationAwareOrderComparator.sort(this.handlerMappings);
 			}
 		}
 		else {
 			try {
-				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.class);
+				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.class); //从当前上下文中获取HandlerMappings实例
 				this.handlerMappings = Collections.singletonList(hm);
 			}
 			catch (NoSuchBeanDefinitionException ex) {
@@ -615,10 +614,10 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
-		// Ensure we have at least one HandlerMapping, by registering
-		// a default HandlerMapping if no other mappings are found.
+		// 如果都没有找到的话，那么就用默认的实现也就是
 		if (this.handlerMappings == null) {
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
+			//使用默认的策略反射生成HandlerMappings，默认策略配置在DispatcherServlet相同包下的DispatcherServlet.properties中
 			if (logger.isDebugEnabled()) {
 				logger.debug("No HandlerMappings found in servlet '" + getServletName() + "': using default");
 			}
@@ -956,7 +955,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false; //判断一下是不是文件请求,多部分请求解析
 
-		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request); //获取wbe异步管理器?
+		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request); //获取wbe异步管理器
 
 		try {
 			ModelAndView mv = null;
@@ -967,7 +966,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				multipartRequestParsed = (processedRequest != request); //已经修改过之后，就说明是multipart请求的
 
 				// Determine handler for the current request.
-				mappedHandler = getHandler(processedRequest); //handler execution chain
+				mappedHandler = getHandler(processedRequest); //获取handler execution chain
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
@@ -980,7 +979,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				String method = request.getMethod();
 				boolean isGet = "GET".equals(method);
 				if (isGet || "HEAD".equals(method)) {
-					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());//???
+					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
 					if (logger.isDebugEnabled()) {
 						logger.debug("Last-Modified value for [" + getRequestUri(request) + "] is: " + lastModified);
 					}
