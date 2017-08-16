@@ -46,6 +46,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerMapping;
 
 /**
+ * 为所有的HandlerMapping的(url,method)的方法匹配的实现提供了基类
+ *
  * Abstract base class for {@link HandlerMapping} implementations that define
  * a mapping between a request and a {@link HandlerMethod}.
  *
@@ -677,6 +679,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 
 	private static class MappingRegistration<T> {
+
+		/**
+		 * 维持方法与url的映射的实体类
+		 */
 
 		private final T mapping;
 

@@ -62,6 +62,8 @@ public interface Ordered {
 	 * analogous to Servlet {@code load-on-startup} values).
 	 * <p>Same order values will result in arbitrary sort positions for the
 	 * affected objects.
+	 *
+	 * 越低优先级越高，获取当前对象的优先级，接口表示的是对象可以排序
 	 * @return the order value
 	 * @see #HIGHEST_PRECEDENCE
 	 * @see #LOWEST_PRECEDENCE

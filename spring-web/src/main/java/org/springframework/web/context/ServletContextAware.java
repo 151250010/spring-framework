@@ -33,6 +33,7 @@ import org.springframework.beans.factory.Aware;
 public interface ServletContextAware extends Aware {
 
 	/**
+	 * 设置对象运行的ServletContext
 	 * Set the {@link ServletContext} that this object runs in.
 	 * <p>Invoked after population of normal bean properties but before an init
 	 * callback like InitializingBean's {@code afterPropertiesSet} or a
@@ -41,6 +42,8 @@ public interface ServletContextAware extends Aware {
 	 * @param servletContext ServletContext object to be used by this object
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
 	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext
+	 *
+	 * 和在属性calculate之后，在回调函数例如afterPropertiesSet 之前，和setApplicationContext 差不多
 	 */
 	void setServletContext(ServletContext servletContext);
 

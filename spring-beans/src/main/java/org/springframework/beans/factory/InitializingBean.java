@@ -32,6 +32,8 @@ package org.springframework.beans.factory;
  * @see BeanFactory
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getInitMethodName
  * @see org.springframework.context.ApplicationContextAware
+ *
+ * 运行bean在所有的属性设置完成之后，增加自己的逻辑
  */
 public interface InitializingBean {
 
