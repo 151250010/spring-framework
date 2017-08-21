@@ -41,9 +41,9 @@ public class RequestMatchResult {
 	/**
 	 * Create an instance with a matching pattern.
 	 * @param matchingPattern the matching pattern, possibly not the same as the
-	 * input pattern, e.g. inputPattern="/foo" and matchingPattern="/foo/".
-	 * @param lookupPath the lookup path extracted from the request
-	 * @param pathMatcher the PathMatcher used
+	 * input pattern, e.g. inputPattern="/foo" and matchingPattern="/foo/". // match的路径
+	 * @param lookupPath the lookup path extracted from the request // 请求中的路径
+	 * @param pathMatcher the PathMatcher used // 使用的pathmatcher 策略
 	 */
 	public RequestMatchResult(String matchingPattern, String lookupPath, PathMatcher pathMatcher) {
 		Assert.hasText(matchingPattern, "'matchingPattern' is required");

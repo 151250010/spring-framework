@@ -200,7 +200,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking for request mappings in application context: " + getApplicationContext());
 		}
-		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
+		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts /*default false*/ ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(obtainApplicationContext(), Object.class) :
 				obtainApplicationContext().getBeanNamesForType(Object.class));
 

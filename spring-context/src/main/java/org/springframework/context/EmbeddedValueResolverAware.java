@@ -32,11 +32,14 @@ import org.springframework.util.StringValueResolver;
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#resolveEmbeddedValue(String)
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getBeanExpressionResolver()
  * @see org.springframework.beans.factory.config.EmbeddedValueResolver
+ *
+ * 通过 EmbeddedValueResolverAware 接口可以获取spring容器加载的 properties文件属性值。
+ *  使用方式 resolver.resolveStringValue("${"+propertyName+"}")
  */
 public interface EmbeddedValueResolverAware extends Aware {
 
 	/**
-	 * Set the StringValueResolver to use for resolving embedded definition values.
+	 * Set the StringValueResolver to use for resolving embedded definition values. （嵌入式的定义）
 	 */
 	void setEmbeddedValueResolver(StringValueResolver resolver);
 
